@@ -2,6 +2,7 @@ package id.ac.mulia.mystudytask.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -44,7 +45,13 @@ fun TaskFormScreen(taskId: Int, vm: TaskViewModel, onDone: () -> Unit) {
                     IconButton(onClick = onDone) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, "Kembali")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+                )
             )
         }
     ) { pad ->
@@ -69,7 +76,11 @@ fun TaskFormScreen(taskId: Int, vm: TaskViewModel, onDone: () -> Unit) {
             error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
 
             Button(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(52.dp),
+                shape = RoundedCornerShape(14.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary
+                ),
                 onClick = {
                     val dateOk = Regex("""\d{4}-\d{2}-\d{2}""").matches(deadline)
                     if (judul.isBlank() || mataKuliah.isBlank()) {
@@ -77,8 +88,12 @@ fun TaskFormScreen(taskId: Int, vm: TaskViewModel, onDone: () -> Unit) {
                     } else if (!dateOk) {
                         error = "Format deadline harus yyyy-MM-dd."
                     } else {
-                        vm.save(Task(taskId, mataKuliah.trim(), judul.trim(), deskripsi.trim(),
-                            deadline, prioritas, status))
+                        vm.save(
+                            Task(
+                                taskId, mataKuliah.trim(), judul.trim(), deskripsi.trim(),
+                                deadline, prioritas, status
+                            )
+                        )
                         onDone()
                     }
                 }

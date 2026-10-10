@@ -34,7 +34,13 @@ fun TaskDetailScreen(
                 actions = {
                     IconButton(onClick = { onEdit(taskId) }) { Icon(Icons.Default.Edit, "Edit") }
                     IconButton(onClick = { confirmDelete = true }) { Icon(Icons.Default.Delete, "Hapus") }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+                )
             )
         }
     ) { pad ->
