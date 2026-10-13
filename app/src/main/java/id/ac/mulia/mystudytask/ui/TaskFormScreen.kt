@@ -65,13 +65,27 @@ fun TaskFormScreen(taskId: Int, vm: TaskViewModel, onDone: () -> Unit) {
                 modifier = Modifier.fillMaxWidth())
             OutlinedTextField(deskripsi, { deskripsi = it }, label = { Text("Deskripsi") },
                 modifier = Modifier.fillMaxWidth(), minLines = 3)
-            OutlinedTextField(deadline, { deadline = it }, label = { Text("Deadline (yyyy-MM-dd)") },
-                modifier = Modifier.fillMaxWidth(), singleLine = true)
 
-            Text("Prioritas")
-            ChoiceRow(TaskOptions.prioritas, prioritas) { prioritas = it }
-            Text("Status")
-            ChoiceRow(TaskOptions.status, status) { status = it }
+            DateField(
+                label = "Deadline",
+                value = deadline,
+                onDateSelected = { deadline = it },
+                modifier = Modifier.fillMaxWidth()
+            )
+            DropdownField(
+                label = "Prioritas",
+                options = TaskOptions.prioritas,
+                selected = prioritas,
+                onSelect = { prioritas = it },
+                modifier = Modifier.fillMaxWidth()
+            )
+            DropdownField(
+                label = "Status",
+                options = TaskOptions.status,
+                selected = status,
+                onSelect = { status = it },
+                modifier = Modifier.fillMaxWidth()
+            )
 
             error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
 
@@ -82,11 +96,10 @@ fun TaskFormScreen(taskId: Int, vm: TaskViewModel, onDone: () -> Unit) {
                     containerColor = MaterialTheme.colorScheme.secondary
                 ),
                 onClick = {
-                    val dateOk = Regex("""\d{4}-\d{2}-\d{2}""").matches(deadline)
                     if (judul.isBlank() || mataKuliah.isBlank()) {
                         error = "Mata kuliah dan judul wajib diisi."
-                    } else if (!dateOk) {
-                        error = "Format deadline harus yyyy-MM-dd."
+                    } else if (deadline.isBlank()) {
+                        error = "Deadline wajib dipilih."
                     } else {
                         vm.save(
                             Task(
@@ -98,15 +111,6 @@ fun TaskFormScreen(taskId: Int, vm: TaskViewModel, onDone: () -> Unit) {
                     }
                 }
             ) { Text("Simpan") }
-        }
-    }
-}
-
-@Composable
-private fun ChoiceRow(options: List<String>, selected: String, onSelect: (String) -> Unit) {
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        options.forEach { o ->
-            FilterChip(selected = selected == o, onClick = { onSelect(o) }, label = { Text(o) })
         }
     }
 }

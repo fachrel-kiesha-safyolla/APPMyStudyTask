@@ -56,16 +56,13 @@ fun TaskDetailScreen(
                 Text("Deskripsi:", style = MaterialTheme.typography.labelLarge)
                 Text(t.deskripsi.ifBlank { "-" })
                 Spacer(Modifier.height(8.dp))
-                Text("Ubah status:", style = MaterialTheme.typography.labelLarge)
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    TaskOptions.status.forEach { s ->
-                        FilterChip(
-                            selected = t.status == s,
-                            onClick = { vm.changeStatus(t, s) },
-                            label = { Text(s) }
-                        )
-                    }
-                }
+                DropdownField(
+                    label = "Status",
+                    options = TaskOptions.status,
+                    selected = t.status,
+                    onSelect = { vm.changeStatus(t, it) },
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }

@@ -4,15 +4,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import id.ac.mulia.mystudytask.data.TaskOptions
 
@@ -24,6 +23,7 @@ fun TaskListScreen(
     onOpen: (Int) -> Unit
 ) {
     val state by vm.uiState.collectAsStateWithLifecycle()
+    val filterOptions = listOf("Semua") + TaskOptions.status
 
     Scaffold(
         topBar = {
@@ -46,31 +46,19 @@ fun TaskListScreen(
         }
     ) { pad ->
         Column(Modifier.padding(pad)) {
-            Row(
-                Modifier
-                    .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                FilterChip(
-                    selected = state.filterStatus == null,
-                    onClick = { vm.setFilter(null) },
-                    label = { Text("Semua") }
-                )
-                TaskOptions.status.forEach { s ->
-                    FilterChip(
-                        selected = state.filterStatus == s,
-                        onClick = { vm.setFilter(s) },
-                        label = { Text(s) }
-                    )
-                }
-            }
+            DropdownField(
+                label = "Filter status",
+                options = filterOptions,
+                selected = state.filterStatus ?: "Semua",
+                onSelect = { vm.setFilter(if (it == "Semua") null else it) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
+            )
+
             if (state.tasks.isEmpty()) {
-                Box(
-                    Modifier.fillMaxSize(),
-                    contentAlignment = androidx.compose.ui.Alignment.Center
-                ) {
-                    Text("Belum ada tugas. Tekan + untuk menambah.")
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("Belum ada tugas. Tekan Tambah Tugas untuk menambah.")
                 }
             } else {
                 LazyColumn(
@@ -79,9 +67,7 @@ fun TaskListScreen(
                 ) {
                     items(state.tasks, key = { it.id }) { t ->
                         Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { onOpen(t.id) },
+                            modifier = Modifier.fillMaxWidth().clickable { onOpen(t.id) },
                             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                             colors = CardDefaults.cardColors(
                                 containerColor = MaterialTheme.colorScheme.surface
@@ -118,8 +104,6 @@ fun TaskListScreen(
 
 fun statusColor(status: String): Color = when (status) {
     "Selesai" -> Color(0xFF2E9E5B)   // hijau
-    "Proses" -> Color(0xFFF2A900)   // kuning
-    else -> Color(0xFFD9534F)   // merah (Belum)
+    "Proses"  -> Color(0xFFF2A900)   // kuning
+    else      -> Color(0xFFD9534F)   // merah (Belum)
 }
-
-
