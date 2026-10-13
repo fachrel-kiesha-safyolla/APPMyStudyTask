@@ -30,3 +30,23 @@ Kotlin, Jetpack Compose (Material 3), Navigation Compose, ViewModel + StateFlow,
 ## Struktur
 - `data/`  : Task (entity), TaskDao, AppDatabase, TaskRepository
 - `ui/`    : TaskViewModel, TaskListScreen, TaskFormScreen, TaskDetailScreen, AppNav
+
+## Screenshot
+
+| Daftar                            | Tambah                            |
+|-----------------------------------|-----------------------------------|
+| ![Daftar](screenshots/daftar.jpg) | ![Tambah](screenshots/tambah.jpg) |
+
+| Detail                            | Edit                          |
+|-----------------------------------|-------------------------------|
+| ![Detail](screenshots/detail.jpg) | ![Edit](screenshots/edit.jpg) |
+
+| filter                            | deadline                              |
+|-----------------------------------|---------------------------------------|
+| ![Filter](screenshots/filter.jpg) | ![Deadline](screenshots/deadline.jpg) |
+
+| konfirmasi                                |
+|-------------------------------------------|
+| ![Konfirmasi](screenshots/konfirmasi.jpg) | 
+
+
